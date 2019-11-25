@@ -9,14 +9,28 @@ typedef enum
   Button_Press_State,
   Correct_Button_State,
   Incorrect_Button_State
-} enumSystemState;
+} eSystemState;
 
+//Events for Simon Says
 typedef enum
 {
   Button_Press_Event,
   Correct_Button_Event,
   Incorrect_Button_Event,
   High_Score_Event
-} enumSystemEvent;
+} eSystemEvent;
+
+//typedef of function pointer
+typedef eSystemState (*pfEventHandler)(void);
+
+//structure of state and event with event handler
+typedef struct
+{
+  eSystemState eStateMachine;
+  eSystemEvent eStateMachineEvent;
+  pfEventHandler pfStateMachineEventHandler;
+} sStateMachine;
+
+
 
 
