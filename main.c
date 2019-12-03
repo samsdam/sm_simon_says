@@ -4,11 +4,9 @@
 typedef enum
 {
   Init_State,
-  Idle_State,
+  Input_Pattern_State,
   Display_Pattern_State,
   Button_Press_State,
-  Correct_Button_State,
-  Incorrect_Button_State
 } eSystemState;
 
 //Events for Simon Says
