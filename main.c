@@ -79,18 +79,67 @@ typedef enum
   High_Score_Event // flashes purple when the high score is excedded +1. 
 } eSystemEvent;
 
-//events                 Animation Finished  | correct button           | incorrect button           | high score            | Timeout
-//states                ----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//typedef for a function pointer to an action that shall be released in each state
+typedef void (*action)();
+
+void animate_correct_led(void);
+void record_score(void);
+void animate_highscore(void);
+
+// states for simon game
+typedef enum
+{
+  Init_State, //chirps and flashes all 4 colors in seccesion. then pauses for a .5 sec
+  Display_Pattern_State, // shows current pattern after init/reset and after succesful user input
+  Input_Pattern_State, // part of the game where its idle and waiting for button presses
+  Lose_State
+} state;
+
+// structure for the elements in the state-event matrix
+typedef struct {
+      state nextState; // Enumerator for the next state
+      action actionToDo; // function-pointer to the action that shall be released in current state
+}  stateElement;
+
+// Transision Table
+//
+//                                                  EVENTS
+//STATES                Animation Finished  | correct button           | incorrect button           | high score            | Timeout
+//-------               ----------------------------------------------------------------------------------------------------------------------
 //Init_State            | {Display_State, 0} | {Display_State, 0}       | {Display_State, 0}         | {Display_State, 0}    | {Lose_State, 0}
 //Display_Pattern_State | {Input_State, 0}   | {Display_State,0}        | {Display_State,0}          | {Display_State,0}     | {Lose_State, 0}
 //Input_Pattern_State   | {Input_State, 0}   | {Input_State, flash_led} | {Lose_State, record_score} | {Input_State, LED_HS} | {Lose_State, 0}
 //Lose_State            | {Init_State, 0}    | {Lose_State, 0}          | {Init_State, 0}            | {Lose_State,0}        | {Init_state, 0}
 
+//the state-event matrix
 stateElement stateMatrix[3][3] = {
        { {Display_Pattern_State, NILACTION}, {STATE_1,ACTION_1}, {STATE_1,ACTION_4} },
        { {Input_Pattern_State, NILACTION},   {STATE_2,ACTION_3}, {STATE_2,ACTION_2} },
        { {High_Score_State ,NILACTION},      {STATE_0,ACTION_2}, {STATE_1,ACTION_3} }
 }
 
+/********************************************************************************
+ * stateEval (event)
+ * in Dependancy of an triggered event, the action wich is required by this
+ * transition will be returned. The proper action is determined by the current state the
+ * automat holds. The current state will then be transitioned to the requestet next
+ * state
+ ********************************************************************************/
+
+void stateEval(event e)
+{
+    //determine the State-Matrix-Element in dependany of current state and triggered event
+    stateElement stateEvaluation = stateMatrix[currentState][e];
+    //do the transition to the next state (set requestet next state to current state)...
+    currentState = stateEvaluation.nextState;
+    //... and fire the proper action
+    (*stateEvaluation.actionToDo)();
+}
 
 
