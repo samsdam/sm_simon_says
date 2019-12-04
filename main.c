@@ -81,8 +81,12 @@ typedef enum
 
 
 
-
-
+/*
+C-Frameworks: Basic State Machine Implementation
+How to Use State Tables for Implementing Finite State Machines
+part 1: http://gedan.net/post/2018-09-29-c-state-machine1/
+Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
+*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //typedef for a function pointer to an action that shall be released in each state
@@ -142,4 +146,15 @@ void stateEval(event e)
     (*stateEvaluation.actionToDo)();
 }
 
+//// or 
+action stateEval(event e) 
+ {
+     //determine the State-Matrix-Element in dependany of current state and triggered event
+     stateElement stateEvaluation = stateMatrix[currentState][e];
+  
+     //do the transition to the next state (set requestet next state to current state)...
+     currentState = stateEvaluation.nextState;
+     //... and fire the proper action
+     return stateEvaluation.actionToDo;
+}
 
