@@ -18,8 +18,7 @@ typedef enum
   Button_Press_Event, // when a button is pressed, might not be needed 
   Correct_Button_Event, // flashes the correct button for a short duration but doesn't exit state, increments high score if cond met
   Incorrect_Button_Event, // all 4 flash red, records high score, resets to init state
-  High_Score_Event, // flashes purple when the high score is excedded +1. 
-  
+  High_Score_Event // flashes purple when the high score is excedded +1. 
 } eSystemEvent;
 
 //typedef of function pointer
