@@ -80,7 +80,7 @@ typedef enum
 } eSystemEvent;
 
 //events                 Animation Finished  | correct button           | incorrect button           | high score            | Timeout
-//states                ---------------------------------------------------------------
+//states                ----------------------------------------------------------------------------------------------------------------------
 //Init_State            | {Display_State, 0} | {Display_State, 0}       | {Display_State, 0}         | {Display_State, 0}    | {Lose_State, 0}
 //Display_Pattern_State | {Input_State, 0}   | {Display_State,0}        | {Display_State,0}          | {Display_State,0}     | {Lose_State, 0}
 //Input_Pattern_State   | {Input_State, 0}   | {Input_State, flash_led} | {Lose_State, record_score} | {Input_State, LED_HS} | {Lose_State, 0}
