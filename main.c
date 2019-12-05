@@ -88,14 +88,15 @@ part 1: http://gedan.net/post/2018-09-29-c-state-machine1/
 Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define APP_PATTERN_MAX_SIZE      128
-#define APP_SEQUENCE_ON_DURATION  (APP_SYSTICKS_PER_SEC * 1)
-#define APP_SEQUENCE_OFF_DURATION (APP_SYSTICKS_PER_SEC / 2)
-#define RGB_RED    {0xFFFF,0x0000,0x0000}
-#define RGB_GREEN  {0x0000,0xFFFF,0x0000}
-#define RGB_BLUE   {0x0000,0x0000,0xFFFF}
-#define RGB_PURPLE {0xFFFF,0x0000,0xFFFF}
-#degine RGB_YELLOW {0xFFFF,0xFFFF,0x0000}
+#define APP_PATTERN_MAX_SIZE    128
+#define APP_FRAME_DURATION      (APP_SYSTICKS_PER_SEC * 1)
+#define APP_TRANSITION_DURATION (APP_SYSTICKS_PER_SEC / 2)
+#define RGB_RED                 {0xFFFF,0x0000,0x0000}
+#define RGB_GREEN               {0x0000,0xFFFF,0x0000}
+#define RGB_BLUE                {0x0000,0x0000,0xFFFF}
+#define RGB_PURPLE              {0xFFFF,0x0000,0xFFFF}
+#degine RGB_YELLOW              {0xFFFF,0xFFFF,0x0000}
+
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
 
@@ -188,7 +189,7 @@ uint32_t ui32SequenceOffTimer;
 
 typedef struct {
     bool bAnimationEnable;
-    volatile uint32_t * FrameArray;
+    volatile uint32_t * ui32FrameArray;
     uint32_t ui32FrameArrayLen;
     uint32_t ui32FrameArrayPos;
     bool bIncludeFrameTransition;
