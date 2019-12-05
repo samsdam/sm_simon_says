@@ -254,6 +254,7 @@ void AppPatternHandler(void)
     if(g_sAnimationState.ui32FrameArrayPos >= g_sAnimationState.ui32FrameArrayLen)
     {
         g_sAnimationState.bAnimationEnable = false;
+        RGBColorSet(RGB_BLACK);
         //send Animation_Finished_Event
     }
 }
