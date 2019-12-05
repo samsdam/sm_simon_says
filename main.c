@@ -208,7 +208,7 @@ void init (void)
   return;
 }
 
-void AppPatternHandler(void)
+void AppAnimationHandler(void)
 {
     // if animation isn't enabled then return
     if(!g_sAnimationState.bAnimationEnable) return;
