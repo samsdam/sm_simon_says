@@ -108,7 +108,7 @@ void animate_highscore(void);
 // states for simon game
 typedef enum
 {
-  Init_State, //chirps and flashes all 4 colors in seccesion. then pauses for a .5 sec
+  Init_State, //chirps and flashes all 4 colors in seccesion. then pauses for a sec
   Display_Pattern_State, // shows current pattern after init/reset and after succesful user input
   Input_Pattern_State, // part of the game where its idle and waiting for button presses
   Lose_State
@@ -140,12 +140,15 @@ typedef struct {
 //Input_Pattern_State   | {Input_State, 0}   | {Input_State, flash_led} | {Lose_State, record_score} | {Input_State, LED_HS} | {Lose_State, 0}
 //Lose_State            | {Init_State, 0}    | {Lose_State, 0}          | {Init_State, 0}            | {Lose_State,0}        | {Init_state, 0}
 
+
+
 //the state-event matrix
-stateElement stateMatrix[3][3] = {
-       { {Display_Pattern_State, NILACTION}, {STATE_1,ACTION_1}, {STATE_1,ACTION_4} },
-       { {Input_Pattern_State, NILACTION},   {STATE_2,ACTION_3}, {STATE_2,ACTION_2} },
-       { {High_Score_State ,NILACTION},      {STATE_0,ACTION_2}, {STATE_1,ACTION_3} }
-}
+stateElement stateMatrix[3][5] = {
+       { {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Lose_State,0} },
+       { {Input_Pattern_State,0},   {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Lose_State,0} },
+       { {Input_Pattern_State,0},   {Input_Pattern_State, 0},  {Lose_State,0},            {Input_Pattern_State,0},   {Lose_State,0} },
+       { {Init_State,0},            {Lose_State,0},            {Lose_State,0},            {Lose_State,0},            {Lose_State,0}
+};
 
 /********************************************************************************
  * stateEval (event)
@@ -210,15 +213,38 @@ void init (void)
 
 void AppAnimationHandler(void)
 {
+    static uint32_t uin32PrevColor[3];
+    static uint32_t ui32FrameTimer;
+    static uint32_t ui32TransitionTimer;
+  
     // if animation isn't enabled then return
-    if(!g_sAnimationState.bAnimationEnable) return;
+    if(!g_sAnimationState.bAnimationEnable)
+    {
+        return;
+    }
+  
+    if(g_sAnimationState.ui32FrameArrayPos >= g_sAnimationState.ui32FrameArrayLen)
+    {
+        g_sAnimationState.bAnimationEnable = false;
+        ui32FrameTimer = 0;
+        ui32TransitionTimer = 0;
+        RGBColorSet(RGB_BLACK);
+        //send Animation_Finished_Event
+    }
     
     uint32_t curPos = g_sAnimationState.ui32FrameArrayPos;
     volatile uint32_t * pFrameArray = g_sAnimationState.pui32FrameArray;
-
+    uint32_t uin32CurColor[3] = {pFrameArray[curPos][0],pFrameArray[curPos][1],pFrameArray[curPos][2]};
+  
+    if(uin32CurColor[0] == uin32PrevColor[0] && 
+       uin32CurColor[0] == uin32PrevColor[0] && 
+       uin32CurColor[0] == uin32PrevColor[0])
+    {
+      
+    }
     if(g_sAnimationState.bIncludeFrameTransition)
     {
-        if(g_sAnimationState.ui32FrameTimer < APP_FRAME_DURATION )
+        if(ui32FrameTimer < APP_FRAME_DURATION )
         {
             g_sAnimationState.ui32FrameTimer++;
             RGBColorSet(pFrameArray[curPos]);
