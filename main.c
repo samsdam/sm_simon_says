@@ -188,7 +188,7 @@ uint32_t ui32SequenceOffTimer;
 
 typedef struct {
     bool bAnimationEnable;
-    volatile uint32_t * FrameArray[];
+    volatile uint32_t * FrameArray;
     uint32_t ui32FrameArrayLen;
     uint32_t ui32FrameArrayPos;
     bool bIncludeFrameTransition;
