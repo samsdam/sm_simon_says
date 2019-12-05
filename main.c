@@ -91,8 +91,10 @@ Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 #define APP_PATTERN_MAX_SIZE      128
 #define APP_SEQUENCE_ON_DURATION  (APP_SYSTICKS_PER_SEC * 1)
 #define APP_SEQUENCE_OFF_DURATION (APP_SYSTICKS_PER_SEC / 2)
-
-
+#define RGB_RED    {0xFFFF,0x0000,0x0000}
+#define RGB_GREEN  {0x0000,0xFFFF,0x0000}
+#define RGB_BLUE   {0x0000,0x0000,0xFFFF}
+#define RGB_PURPLE {0xFFFF,0x0000,0xFFFF}
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
 
@@ -191,7 +193,7 @@ typedef struct {
     bool bIncludeFrameTransition;
     uint32_t ui32FrameTimer;
    uint32_t ui32TransitionTimer;
-} animation;
+} tAnimationState;
 
 uint32_t ui32LoseAnimation = {RED,RED,RED};
 uint32_t ui32CorrectButtonAnimation = {BLUE}; // should be 
