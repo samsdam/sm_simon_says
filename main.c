@@ -95,6 +95,7 @@ Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 #define RGB_GREEN  {0x0000,0xFFFF,0x0000}
 #define RGB_BLUE   {0x0000,0x0000,0xFFFF}
 #define RGB_PURPLE {0xFFFF,0x0000,0xFFFF}
+#degine RGB_YELLOW {0xFFFF,0xFFFF,0x0000}
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
 
@@ -195,10 +196,10 @@ typedef struct {
    uint32_t ui32TransitionTimer;
 } tAnimationState;
 
-uint32_t ui32LoseAnimation = {RED,RED,RED};
+uint32_t ui32LoseAnimation = {RGB_RED,RGB_RED,RGB_RED};
 uint32_t ui32CorrectButtonAnimation = {BLUE}; // should be 
-uint32_t ui32InitAnimation = {GREEN, RED, BLUE, YELLOW};
-uint32_t ui32HighScoreAnimation = {PURPLE};
+uint32_t ui32InitAnimation = {RGB_GREEN, RGB_RED, RGB_BLUE, RGB_YELLOW};
+uint32_t ui32HighScoreAnimation = {RGB_PURPLE};
 
 void init (void)
 {
