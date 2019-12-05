@@ -207,4 +207,9 @@ void init (void)
   return;
 }
 
-
+void AppPatternHandler(void)
+{
+    if(!g_sAnimationState.bAnimationEnable) return;
+    uint32_t curPos = g_sAnimationState.ui32FrameArrayPos;
+    
+}
