@@ -101,9 +101,11 @@ Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
 
-void animate_correct_led(void);
+void flash_correct_led(void);
 void record_score(void);
-void animate_highscore(void);
+void show_reached_highscore(void);
+void show_pattern(void);
+void show_init(void);
 
 // states for simon game
 typedef enum
@@ -143,11 +145,11 @@ typedef struct {
 
 
 //the state-event matrix
-stateElement stateMatrix[3][5] = {
-       { {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Lose_State,0} },
-       { {Input_Pattern_State,0},   {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Display_Pattern_State,0}, {Lose_State,0} },
-       { {Input_Pattern_State,0},   {Input_Pattern_State, 0},  {Lose_State,0},            {Input_Pattern_State,0},   {Lose_State,0} },
-       { {Init_State,0},            {Lose_State,0},            {Lose_State,0},            {Lose_State,0},            {Lose_State,0}
+stateElement stateMatrix[4][5] = {
+       { {Display_Pattern_State,show_pattern}, {Display_Pattern_State,show_pattern},     {Display_Pattern_State,0}, {Init_State,0},                               {Init_State,0}            },
+       { {Input_Pattern_State,0},              {Display_Pattern_State,0},                {Display_Pattern_State,0}, {Display_Pattern_State,0},                    {Display_Pattern_State,0} },
+       { {Input_Pattern_State,0},              {Input_Pattern_State, flash_correct_led}, {Lose_State,record_score}, {Input_Pattern_State,show_reached_highscore}, {Lose_State,record_score} },
+       { {Init_State, show_init},              {Init_State, show_init},                  {Lose_State,0},            {Lose_State,0},                               {Lose_State,0}
 };
 
 /********************************************************************************
