@@ -197,10 +197,10 @@ typedef struct {
    uint32_t ui32TransitionTimer;
 } tAnimationState;
 
-uint32_t ui32LoseAnimation = {RGB_RED,RGB_RED,RGB_RED};
-uint32_t ui32CorrectButtonAnimation = {BLUE}; // should be 
-uint32_t ui32InitAnimation = {RGB_GREEN, RGB_RED, RGB_BLUE, RGB_YELLOW};
-uint32_t ui32HighScoreAnimation = {RGB_PURPLE};
+uint32_t ui32LoseAnimation[3] = {RGB_RED,RGB_RED,RGB_RED};
+uint32_t ui32CorrectButtonAnimation[1] = {BLUE}; // should be 
+uint32_t ui32InitAnimation[4] = {RGB_GREEN, RGB_RED, RGB_BLUE, RGB_YELLOW};
+uint32_t ui32HighScoreAnimation[1] = {RGB_PURPLE};
 
 void init (void)
 {
