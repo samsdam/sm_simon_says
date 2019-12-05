@@ -215,21 +215,45 @@ void AppPatternHandler(void)
     
     uint32_t curPos = g_sAnimationState.ui32FrameArrayPos;
     volatile uint32_t * pFrameArray = g_sAnimationState.pui32FrameArray;
-  
-    if(g_sAnimationState.ui32FrameTimer < APP_FRAME_DURATION)
+
+    if(g_sAnimationState.bIncludeFrameTransition)
     {
-         g_sAnimationState.ui32FrameTimer++;
-         RGBColorSet(pFrameArray[curPos]);
-    }
-    else if (g_sAnimationState.ui32FrameTimer == APP_FRAME_DURATION && 
-             g_sAnimationState.bIncludeFrameTransition)
-    {
-        if(g_sAnimationState.ui32TransitionTimer < APP_TRANSITION_DURATION)
+        if(g_sAnimationState.ui32FrameTimer < APP_FRAME_DURATION )
         {
             g_sAnimationState.ui32FrameTimer++;
+            RGBColorSet(pFrameArray[curPos]);
+        }
+        else if (g_sAnimationState.ui32TransitionTimer < APP_TRANSITION_DURATION)
+        {
+            g_sAnimationState.ui32TransitionTimer++;
             RGBColorSet(RGB_BLACK);
         }
+        else
+        {
+            g_sAnimationState.ui32FrameTimer = 0;
+            g_sAnimationState.ui32TransitionTimer = 0;
+            RGBColorSet(RGB_BLACK);
+            g_sAnimationState.ui32FrameArrayPos++;
+        }
+    } 
+    else
+    {
+        if(g_sAnimationState.ui32FrameTimer < APP_FRAME_DURATION )
+        {
+            g_sAnimationState.ui32FrameTimer++;
+            RGBColorSet(pFrameArray[curPos]);
+        }
+        else
+        {
+            g_sAnimationState.ui32FrameTimer = 0;
+            RGBColorSet(pFrameArray[curPos]);
+            g_sAnimationState.ui32FrameArrayPos++;
+        }
     }
-    
-    
+
+    if(g_sAnimationState.ui32FrameArrayPos >= g_sAnimationState.ui32FrameArrayLen)
+    {
+        g_sAnimationState.bAnimationEnable = false;
+        //send Animation_Finished_Event
+    }
 }
