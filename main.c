@@ -88,6 +88,10 @@ part 1: http://gedan.net/post/2018-09-29-c-state-machine1/
 Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define APP_PATTERN_MAX_SIZE      128
+#define APP_SEQUENCE_ON_DURATION  (APP_SYSTICKS_PER_SEC * 1)
+#define APP_SEQUENCE_OFF_DURATION (APP_SYSTICKS_PER_SEC / 2)
+
 
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
@@ -105,6 +109,16 @@ typedef enum
   Lose_State
 } state;
 
+typedef enum
+{
+  Nil_Event,
+  Animation_Finished_Event, // even to transision to user input state
+  Correct_Button_Event, // flashes the correct button for a short duration but doesn't exit state, increments high score if cond met
+  Incorrect_Button_Event, // all 4 flash red, records high score, resets to init state
+  High_Score_Event, // flashes purple when the high score is excedded +1.
+  Timeout_Event // when the user doesn't hit a button for 30 sec
+} eSystemEvent;
+
 // structure for the elements in the state-event matrix
 typedef struct {
       state nextState; // Enumerator for the next state
@@ -114,7 +128,7 @@ typedef struct {
 // Transision Table
 //
 //                                                  EVENTS
-//STATES                Animation Finished  | correct button           | incorrect button           | high score            | Timeout
+//STATES                Animation Finished  | correct button            | incorrect button           | high score            | Timeout
 //-------               ----------------------------------------------------------------------------------------------------------------------
 //Init_State            | {Display_State, 0} | {Display_State, 0}       | {Display_State, 0}         | {Display_State, 0}    | {Lose_State, 0}
 //Display_Pattern_State | {Input_State, 0}   | {Display_State,0}        | {Display_State,0}          | {Display_State,0}     | {Lose_State, 0}
@@ -157,4 +171,36 @@ action stateEval(event e)
      //... and fire the proper action
      return stateEvaluation.actionToDo;
 }
+
+uint32_t ui32Pattern[APP_PATTERN_MAX_SIZE];
+uint32_t ui32PatternPos; // current position of pattern 
+uint32_t ui32PatternLen; // current pattern lenth
+uint32_t event; //can be nil
+
+// Sub animation for each color {on,off}
+// ex | ui32Pattern[x] == blue                 |
+//    | led blue for 1 sec, led off for .5 sec |
+uint32_t ui32SequenceOnTimer; 
+uint32_t ui32SequenceOffTimer;
+
+typedef struct {
+    bool bAnimationEnable;
+    volatile uint32_t * FrameArray[];
+    uint32_t ui32FrameArrayLen;
+    uint32_t ui32FrameArrayPos;
+    bool bIncludeFrameTransition;
+    uint32_t ui32FrameTimer;
+   uint32_t ui32TransitionTimer;
+} animation;
+
+uint32_t ui32LoseAnimation = {RED,RED,RED};
+uint32_t ui32CorrectButtonAnimation = {BLUE}; // should be 
+uint32_t ui32InitAnimation = {GREEN, RED, BLUE, YELLOW};
+uint32_t ui32HighScoreAnimation = {PURPLE};
+
+void init (void)
+{
+  return;
+}
+
 
