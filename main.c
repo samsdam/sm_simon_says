@@ -96,6 +96,7 @@ Part 2: http://gedan.net/post/2018-09-29-c-state-machine2/
 #define RGB_BLUE                {0x0000,0x0000,0xFFFF}
 #define RGB_PURPLE              {0xFFFF,0x0000,0xFFFF}
 #define RGB_YELLOW              {0xFFFF,0xFFFF,0x0000}
+#define RGB_BLACK               {0x0000,0x0000,0x0000}
 
 //typedef for a function pointer to an action that shall be released in each state
 typedef void (*action)();
@@ -189,7 +190,7 @@ uint32_t ui32SequenceOffTimer;
 
 typedef struct {
     bool bAnimationEnable;
-    volatile uint32_t * ui32FrameArray;
+    volatile uint32_t * pui32FrameArray;
     uint32_t ui32FrameArrayLen;
     uint32_t ui32FrameArrayPos;
     bool bIncludeFrameTransition;
@@ -209,7 +210,26 @@ void init (void)
 
 void AppPatternHandler(void)
 {
+    // if animation isn't enabled then return
     if(!g_sAnimationState.bAnimationEnable) return;
+    
     uint32_t curPos = g_sAnimationState.ui32FrameArrayPos;
+    volatile uint32_t * pFrameArray = g_sAnimationState.pui32FrameArray;
+  
+    if(g_sAnimationState.ui32FrameTimer < APP_FRAME_DURATION)
+    {
+         g_sAnimationState.ui32FrameTimer++;
+         RGBColorSet(pFrameArray[curPos]);
+    }
+    else if (g_sAnimationState.ui32FrameTimer == APP_FRAME_DURATION && 
+             g_sAnimationState.bIncludeFrameTransition)
+    {
+        if(g_sAnimationState.ui32TransitionTimer < APP_TRANSITION_DURATION)
+        {
+            g_sAnimationState.ui32FrameTimer++;
+            RGBColorSet(RGB_BLACK);
+        }
+    }
+    
     
 }
