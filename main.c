@@ -286,3 +286,11 @@ void AppAnimationHandler(void)
         //send Animation_Finished_Event
     }
 }
+
+//        Animation_Finished_Event              Correct_Button_Event                      Incorrect_Button_Event     Pattern_Completed_Event               Timeout_Event
+tAppStateElement mAppStateMatrix[4][5] = {
+/*INIT*/{ {Display_Pattern_State,show_pattern}, {Display_Pattern_State,show_pattern},     {Display_Pattern_State,0}, {Init_State,0},                       {Init_State,0}            },
+/*DISP*/{ {Input_Pattern_State,0},              {Display_Pattern_State,0},                {Display_Pattern_State,0}, {Display_Pattern_State,0},            {Display_Pattern_State,0} },
+/*INPT*/{ {Input_Pattern_State,0},              {Input_Pattern_State, flash_correct_led}, {Lose_State,show_loss},    {Display_Pattern_State,show_pattern}, {Lose_State,show_loss}    },
+/*LOSE*/{ {Init_State, show_init},              {Init_State, show_init},                  {Lose_State,0},            {Lose_State,0},                       {Lose_State,0}            }
+};
